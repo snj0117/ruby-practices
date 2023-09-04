@@ -1,5 +1,4 @@
-i = 1..20
-i.each do |i|
+(1..20).each do |i|
   if i % 15 == 0
     puts "FizzBuzz"
   elsif i % 3 == 0
