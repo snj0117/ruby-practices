@@ -1,50 +1,35 @@
 require_relative "selected_yearmonth.rb"
 
-date = SelectedYearMonth.new
-first_date = date.first_date
-last_date = date.last_date
-year = first_date.year
-month = last_date.month
-current_date = first_date
-space = " "
+date = SelectedMonth.new
 
-print space * 6, "#{month}月#{space}#{year}\n"
-print "日#{space}月#{space}火#{space}水#{space}木#{space}金#{space}土"
-print "\n"
-first_week_space  = space * (( 3 * first_date.wday + 1) -1 ) 
-print first_week_space
+#カレンダー用レイアウト作成
+print "      #{date.first_date.month}月 #{date.first_date.year}\n日 月 火 水 木 金 土\n"
+print " " * (( 3 * date.first_date.wday + 1) -1 ) 
 
-def format_single_digit_day(current_date, space)
-  if current_date.day <= 9
-   print "#{space}#{current_date.day}"
-   else
-   print "#{current_date.day}"
-  end
+#1桁の日付を半角2文字分にする
+def format_single_digit_day(current_date)
+  current_date.day.to_s.rjust(2)
 end
 
-def highlight_today(current_date, space)
-  today = Date.today
-  if current_date == today
-    print "\e[7m"
-    format_single_digit_day(current_date, space)
-    print "\e[0m"
+#今日の日付を文字色と背景色を反転
+def highlight_today(current_date)
+  if current_date == Date.today
+    print "\e[7m#{format_single_digit_day(current_date)}\e[0m"
   else
-    print format_single_digit_day(current_date, space)
+    format_single_digit_day(current_date)
   end
 end
 
-def display_calendar(current_date, last_date, space)
-  while current_date <= last_date
+#カレンダーを組む（土曜で改行）
+def display_calendar(current_date, month_last_date)
+  while current_date <= month_last_date
     if current_date.saturday?
-      highlight_today(current_date, space)
-      print "#{space}" 
-      print "\n"
-    else current_date.saturday?
-      highlight_today(current_date, space)
-      print "#{space}"
+      print "#{highlight_today(current_date)} \n"
+    else
+      print "#{highlight_today(current_date)} "
     end
     current_date = current_date.next_day(1)
   end
 end
 
-display_calendar(current_date, last_date, space)
+display_calendar(date.first_date, date.last_date)
