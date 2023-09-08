@@ -1,4 +1,4 @@
-require_relative "selected_yearmonth.rb"
+require_relative "selected_month.rb"
 
 date = SelectedMonth.new
 
