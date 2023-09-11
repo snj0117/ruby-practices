@@ -6,30 +6,25 @@ date = SelectedMonth.new
 print "      #{date.first_date.month}月 #{date.first_date.year}\n日 月 火 水 木 金 土\n"
 print " " * (( 3 * date.first_date.wday + 1) -1 ) 
 
-#1桁の日付を半角2文字分にする
-def format_single_digit_day(current_date)
-  current_date.day.to_s.rjust(2)
-end
-
 #今日の日付を文字色と背景色を反転
 def highlight_today(current_date)
+  day_str = current_date.day.to_s.rjust(2) #1桁の日付を半角2文字分にする
   if current_date == Date.today
-    print "\e[7m#{format_single_digit_day(current_date)}\e[0m"
+    "\e[7m#{day_str}\e[0m"
   else
-    format_single_digit_day(current_date)
+    day_str
   end
 end
 
 #カレンダーを組む（土曜で改行）
-def display_calendar(current_date, month_last_date)
+def display_calendar(selected_month)
+  current_date = selected_month.first_date
+  month_last_date = selected_month.last_date
   while current_date <= month_last_date
-    if current_date.saturday?
-      print "#{highlight_today(current_date)} \n"
-    else
-      print "#{highlight_today(current_date)} "
-    end
-    current_date = current_date.next_day(1)
+      print highlight_today(current_date) #日付を並べる
+      print current_date.saturday? ? "\n" : " " #土曜日なら改行、そうでなければ半角スペース
+      current_date = current_date.next_day(1)
   end
 end
 
-display_calendar(date.first_date, date.last_date)
+display_calendar(date)
